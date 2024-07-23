@@ -4,10 +4,69 @@
     <meta charset="UTF-8">
     <title>Chess Game</title>
     <link rel="stylesheet" href="/static/css/chessboard-1.0.0.min.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
     <style>
-        .board {
-            width: 400px;
+        * {
+            font-family: 'inter', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: row;
+        }
+        button {
+            padding: 0.5em;
+            background-color: rgba(120, 183, 220, 0.6);
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+            margin: 6px;
+            margin-bottom: 2px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: rgba(120, 183, 220, 1);
+            cursor: pointer;
+        }
+        input[type="text"] {
+            border: 2px solid #ccc; 
+            padding: 8px; 
+            border-radius: 4px;
+            margin: auto; max-width: 100%;
+            width: 98%;
+        }
+
+        #loadFenButton {
+            margin-left: 0px;
+        }
+        .functions {
+            width: 30%;
+            padding-left: 2em;
+            padding-top: 1em;
+        }
+        .board-container {
+            width: 50%; 
+            margin: auto; 
+            margin-top: 20px; 
+            
+        }
+        @media screen and (max-width: 720px) {
+            body {
+                flex-direction: column;
+            }
+            .functions {
+                width: 98%;
+                padding: 0;
+                margin: auto;
+            }
+            .board-container {
+                width: 98%;
+                max-width: 100%;
+            }
+            #fenInput {
+                width: 90%;
+            }
         }
         .spinner {
             display: none;
@@ -35,15 +94,26 @@ https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 
 </head>
 <body>
-    <h1>play the bengine</h1>
-    <div class="board" id="board"></div>
+    <div class="functions">
+        <h1 style="margin-bottom: 6px;">play the bengine</h1>
+        <h2 style="color: grey; margin-top: 0; font-size: 16pt; font-weight: 400;">currently around 1400 elo</h2>
+        <input type="text" id="fenInput" placeholder="start from a custom position">
+        <div style="display: flex; flex-direction: row;">
+            <button id="loadFenButton">play as black</button>
+            
+            <button id="removePiecesLeaveRooks">run engine v. engine</button>
+        </div>
+    </div>
+    <div class="board-container">
+        <div id="board" style="width: 500px; max-width: 100%; margin: auto;"></div>
+        <div class="spinner" id="spinner"></div>
 
-    <form id="moveForm" display="none" >
+    </div>
+    <!-- <form id="moveForm" >
         <input type="text" id="move" name="move" placeholder="Enter your move">
         <button type="submit">Submit</button>
     </form>
-    <button id="newGame">New Game</button>
-    <div class="spinner" id="spinner"></div>
+    <button id="newGame">New Game</button> -->
     <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"
 crossorigin="anonymous"></script> -->
 
