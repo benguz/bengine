@@ -60,6 +60,7 @@ crossorigin="anonymous"></script>
             position: 'start',
             pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
         });
+        var fen = board.fen();
     });
         
         async function onDrop(source, target, piece) {
@@ -78,7 +79,7 @@ crossorigin="anonymous"></script>
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `move=${move.trim()}`
+                body: `move=${move.trim()}&fen=${encodeURIComponent(fen)}`
             });
             const result = await response.json();
             spinner.classList.remove('loading');
@@ -94,21 +95,22 @@ crossorigin="anonymous"></script>
                     pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
                 }
                 board = Chessboard('board', config)
+                fen = board.fen()
 
             } else {
                 alert(result.message);
             }
         }
 
-        document.getElementById('newGame').onclick = async function() {
-            const response = await fetch('/new_game', {
-                method: 'POST'
-            });
-            const result = await response.json();
-            if (result.status === 'success') {
-                console.log("started")
-            }
-        };
+        // document.getElementById('newGame').onclick = async function() {
+        //     const response = await fetch('/new_game', {
+        //         method: 'POST'
+        //     });
+        //     const result = await response.json();
+        //     if (result.status === 'success') {
+        //         console.log("started")
+        //     }
+        // };
         // document.getElementById('moveForm').onsubmit = async function(event) {
         //     event.preventDefault();
         //     const spinner = document.getElementById('spinner');
