@@ -178,9 +178,9 @@ crossorigin="anonymous"></script> -->
             }
         }
 
-        $('#loadFenButton').on('click', function () {
+        $('#loadFenButton').on('click', async function () {
               var config = {
-                    position: $('#fenInput'),
+                    position: $('#fenInput').val(),
                     draggable: true,
                     dropOffBoard: 'trash',
                     sparePieces: false,
@@ -188,6 +188,34 @@ crossorigin="anonymous"></script> -->
                     pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
                 }
                 board = Chessboard('board', config)
+
+                const response = await fetch('/fen', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `fen=${encodeURIComponent(fen)}`
+            });
+            const result = await response.json();
+            spinner.classList.remove('loading');
+
+            if (result.status === 'success') {
+                console.log(result.board_fen)
+                var config = {
+                    position: result.board_fen,
+                    draggable: true,
+                    dropOffBoard: 'trash',
+                    sparePieces: false,
+                    onDrop: onDrop,
+                    pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
+                }
+                board = Chessboard('board', config)
+                fen = result.board_fen
+
+            } else {
+                alert(result.message);
+            }
+
         })
         $('#loadFenButtonB').on('click', function () {
               var config = {

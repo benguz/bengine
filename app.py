@@ -7,12 +7,9 @@ import chess.svg
 from stockfish import Stockfish
 import signal
 import urllib.parse
+from aiohttp import web
 
-
-from helpers import choose_move, calculate_material, hangs, recapturable
-from players import sensible_sam
 from engine import engine
-from prevengine import prevengine
 
 app = Flask(__name__)
 
@@ -40,6 +37,21 @@ async def move():
             return jsonify({'status': 'success', 'board_fen': board.fen()})
         else:
             return jsonify({'status': 'illegal', 'message': 'Illegal move'})
+    except:
+        return jsonify({'status': 'invalid', 'message': 'Invalid move format'})
+
+@app.route('/fen', methods=['POST'])
+async def move():
+    try:
+        fen = urllib.parse.unquote(request.form['fen'])
+        board = chess.Board(fen)
+        nextMove = await engine(board)
+        if board.parse_san(nextMove) in board.legal_moves:
+            board.push_san(nextMove)
+        else:
+            return jsonify({'status': 'illegal', 'message': 'Illegal engine move'})
+        # return jsonify({'status': 'success', 'board_svg': chess.svg.board(board)})
+        return jsonify({'status': 'success', 'board_fen': board.fen()})
     except:
         return jsonify({'status': 'invalid', 'message': 'Invalid move format'})
 

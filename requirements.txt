@@ -4,3 +4,4 @@ stockfish
 flask[async]
 gunicorn
 gevent
+aiohttp
