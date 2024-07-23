@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Game</title>
+    <link rel="stylesheet" href="/static/css/chessboard-1.0.0.min.css">
+
+    <style>
+        .board {
+            width: 400px;
+        }
+        .spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading {
+            display: block;
+        }
+    </style>    <script src="
+https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+"></script>
+
+</head>
+<body>
+    <h1>play the bengine</h1>
+    <div class="board" id="board"></div>
+
+    <form id="moveForm" display="none" >
+        <input type="text" id="move" name="move" placeholder="Enter your move">
+        <button type="submit">Submit</button>
+    </form>
+    <button id="newGame">New Game</button>
+    <div class="spinner" id="spinner"></div>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+crossorigin="anonymous"></script> -->
+
+<script src="/static/js/chessboard-1.0.0.min.js"
+crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var board = Chessboard('board', {
+            draggable: true,
+            dropOffBoard: 'trash',
+            sparePieces: false,
+            onDrop: onDrop,
+            position: 'start',
+            pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
+        });
+    });
+        
+        async function onDrop(source, target, piece) {
+            // if it's a pawn move to _8, append q to the move
+            if ((source.charAt(1) === '8' && piece === 'wP') || (source.charAt(1) === '1' && piece === 'bP')) {
+                target += 'q';
+            }
+            if (move === null) return 'snapback';
+
+            const spinner = document.getElementById('spinner');
+            spinner.classList.add('loading');
+            move = source + target;
+            console.log(move)
+            const response = await fetch('/move', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `move=${move.trim()}`
+            });
+            const result = await response.json();
+            spinner.classList.remove('loading');
+
+            if (result.status === 'success') {
+                console.log(result.board_fen)
+                var config = {
+                    position: result.board_fen,
+                    draggable: true,
+                    dropOffBoard: 'trash',
+                    sparePieces: false,
+                    onDrop: onDrop,
+                    pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
+                }
+                board = Chessboard('board', config)
+
+            } else {
+                alert(result.message);
+            }
+        }
+
+        document.getElementById('newGame').onclick = async function() {
+            const response = await fetch('/new_game', {
+                method: 'POST'
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                console.log("started")
+            }
+        };
+        // document.getElementById('moveForm').onsubmit = async function(event) {
+        //     event.preventDefault();
+        //     const spinner = document.getElementById('spinner');
+        //     spinner.classList.add('loading');
+        //     const move = document.getElementById('move').value;
+        //     const response = await fetch('/move', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/x-www-form-urlencoded',
+        //         },
+        //         body: `move=${move}`
+        //     });
+        //     const result = await response.json();
+        //     spinner.classList.remove('loading');
+        //     if (result.status === 'success') {
+        //         document.getElementById('board').innerHTML = result.board_svg;
+        //     } else {
+        //         alert(result.message);
+        //     }
+        // };
+
+        // document.getElementById('newGame').onclick = async function() {
+        //     const response = await fetch('/new_game', {
+        //         method: 'POST'
+        //     });
+        //     const result = await response.json();
+        //     if (result.status === 'success') {
+        //         document.getElementById('board').innerHTML = result.board_svg;
+        //     }
+        // };
+    </script>
+</body>
+</html>
