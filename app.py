@@ -6,6 +6,8 @@ import chess.pgn
 import chess.svg
 from stockfish import Stockfish
 import signal
+import urllib.parse
+
 
 from helpers import choose_move, calculate_material, hangs, recapturable
 from players import sensible_sam
@@ -13,10 +15,10 @@ from engine import engine
 from prevengine import prevengine
 
 app = Flask(__name__)
-board = chess.Board()
 
 @app.route('/')
 async def index():
+    board = chess.Board()
     board_svg = chess.svg.board(board)
     return render_template('index.html', board_svg=board_svg)
 
@@ -24,6 +26,8 @@ async def index():
 async def move():
     user_move = request.form['move']
     try:
+        fen = urllib.parse.unquote(request.form['fen'])
+        board = chess.Board(fen)
         move = board.parse_san(user_move)
         if move in board.legal_moves:
             board.push(move)
@@ -39,11 +43,11 @@ async def move():
     except:
         return jsonify({'status': 'invalid', 'message': 'Invalid move format'})
 
-@app.route('/new_game', methods=['POST'])
-async def new_game():
-    global board
-    board = chess.Board()
-    return jsonify({'status': 'success', 'board_svg': chess.svg.board(board)})
+# @app.route('/new_game', methods=['POST'])
+# async def new_game():
+#     global board
+#     board = chess.Board()
+#     return jsonify({'status': 'success', 'board_svg': chess.svg.board(board)})
 
 if __name__ == "__main__":
     app.run(debug=True)

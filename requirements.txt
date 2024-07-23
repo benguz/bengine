@@ -3,3 +3,4 @@ asyncio
 stockfish
 flask[async]
 gunicorn
+gevent
