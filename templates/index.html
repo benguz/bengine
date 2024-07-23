@@ -127,7 +127,7 @@ crossorigin="anonymous"></script> -->
         document.addEventListener('DOMContentLoaded', function() {
         var board = Chessboard('board', {
             draggable: true,
-            dropOffBoard: 'trash',
+            dropOffBoard: 'snapback',
             sparePieces: false,
             onDrop: onDrop,
             position: 'start',
@@ -146,6 +146,7 @@ crossorigin="anonymous"></script> -->
             if ((source.charAt(1) === '8' && piece === 'wP') || (source.charAt(1) === '1' && piece === 'bP')) {
                 target += 'q';
             }
+            // handle casting (if a king moves two squares, make the move a castling notation move)
             const spinner = document.getElementById('spinner');
             spinner.classList.add('loading');
             move = source + target;
@@ -174,6 +175,7 @@ crossorigin="anonymous"></script> -->
                 fen = result.board_fen
 
             } else {
+                spinner.classList.remove('loading');
                 alert(result.message);
             }
         }
@@ -182,7 +184,7 @@ crossorigin="anonymous"></script> -->
               var config = {
                     position: $('#fenInput').val(),
                     draggable: true,
-                    dropOffBoard: 'trash',
+                    dropOffBoard: 'snapback',
                     sparePieces: false,
                     onDrop: onDrop,
                     pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
@@ -204,7 +206,7 @@ crossorigin="anonymous"></script> -->
                 var config = {
                     position: result.board_fen,
                     draggable: true,
-                    dropOffBoard: 'trash',
+                    dropOffBoard: 'snapback',
                     sparePieces: false,
                     onDrop: onDrop,
                     pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
@@ -221,7 +223,7 @@ crossorigin="anonymous"></script> -->
               var config = {
                     position: $('#fenInput'),
                     draggable: true,
-                    dropOffBoard: 'trash',
+                    dropOffBoard: 'snapback',
                     sparePieces: false,
                     onDrop: onDrop,
                     pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
