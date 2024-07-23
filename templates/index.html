@@ -73,7 +73,7 @@ crossorigin="anonymous"></script>
             const spinner = document.getElementById('spinner');
             spinner.classList.add('loading');
             move = source + target;
-            console.log(move)
+            console.log(move, fen)
             const response = await fetch('/move', {
                 method: 'POST',
                 headers: {
