@@ -51,7 +51,7 @@ crossorigin="anonymous"></script> -->
 crossorigin="anonymous"></script>
 
     <script>
-        var fen = "";
+        var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         document.addEventListener('DOMContentLoaded', function() {
         var board = Chessboard('board', {
             draggable: true,
@@ -61,7 +61,6 @@ crossorigin="anonymous"></script>
             position: 'start',
             pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
         });
-        fen = board.fen();
     });
         
         async function onDrop(source, target, piece) {
@@ -96,7 +95,7 @@ crossorigin="anonymous"></script>
                     pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
                 }
                 board = Chessboard('board', config)
-                fen = board.fen()
+                fen = result.board_fen
 
             } else {
                 alert(result.message);
