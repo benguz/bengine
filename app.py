@@ -41,7 +41,7 @@ async def move():
         return jsonify({'status': 'invalid', 'message': 'Invalid move format'})
 
 @app.route('/fen', methods=['POST'])
-async def move():
+async def fen():
     try:
         fen = urllib.parse.unquote(request.form['fen'])
         board = chess.Board(fen)
