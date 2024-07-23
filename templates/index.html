@@ -8,9 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 
-<script src="/static/js/chessboard-1.0.0.min.js"
-crossorigin="anonymous"></script>
-
     <style>
         * {
             font-family: 'inter', sans-serif;
@@ -96,6 +93,9 @@ crossorigin="anonymous"></script>
 https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 "></script>
 
+<script src="/static/js/chessboard-1.0.0.min.js"
+crossorigin="anonymous"></script>
+
 </head>
 <body>
     <div class="functions">
@@ -103,8 +103,8 @@ https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
         <h2 style="color: grey; margin-top: 0; font-size: 16pt; font-weight: 400;">currently around 1400 elo</h2>
         <input type="text" id="fenInput" placeholder="start from a custom position">
         <div style="display: flex; flex-direction: row;">
-            <button id="loadFenButton">play as black</button>
-            
+            <button id="loadFenButton">white</button>
+            <button id="loadFenButtonB">black</button>
             <button id="removePiecesLeaveRooks">run engine v. engine</button>
         </div>
     </div>
@@ -136,11 +136,11 @@ crossorigin="anonymous"></script> -->
         
         async function onDrop(source, target, piece, newPos, oldPos, orientation) {
             // if it's a pawn move to _8, append q to the move
-            if ((source.charAt(1) === '8' && piece === 'wP') || (source.charAt(1) === '1' && piece === 'bP')) {
-                target += 'q';
-            }
             if (piece.search(/b/) !== -1) {
                 return 'snapback'
+            }
+            if ((source.charAt(1) === '8' && piece === 'wP') || (source.charAt(1) === '1' && piece === 'bP')) {
+                target += 'q';
             }
             const spinner = document.getElementById('spinner');
             spinner.classList.add('loading');
@@ -173,6 +173,31 @@ crossorigin="anonymous"></script> -->
                 alert(result.message);
             }
         }
+
+        $('#loadFenButton').on('click', function () {
+              var config = {
+                    position: $('#fenInput'),
+                    draggable: true,
+                    dropOffBoard: 'trash',
+                    sparePieces: false,
+                    onDrop: onDrop,
+                    pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
+                }
+                board = Chessboard('board', config)
+        })
+        $('#loadFenButtonB').on('click', function () {
+              var config = {
+                    position: $('#fenInput'),
+                    draggable: true,
+                    dropOffBoard: 'trash',
+                    sparePieces: false,
+                    onDrop: onDrop,
+                    pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
+                    orientation: 'black',
+                }
+                board = Chessboard('board', config)
+        })
+
 
         // document.getElementById('newGame').onclick = async function() {
         //     const response = await fetch('/new_game', {
