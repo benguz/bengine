@@ -103,14 +103,14 @@ crossorigin="anonymous"></script>
         <h2 style="color: grey; margin-top: 0; font-size: 16pt; font-weight: 400;">currently around 1400 elo</h2>
         <input type="text" id="fenInput" placeholder="start from a custom position">
         <div style="display: flex; flex-direction: row;">
-            <button id="loadFenButton">white</button>
-            <button id="loadFenButtonB">black</button>
+            <button id="loadFenButton">flip board</button>
             <button id="removePiecesLeaveRooks">run engine v. engine</button>
         </div>
+        <div class="spinner" id="spinner"></div>
+
     </div>
     <div class="board-container">
         <div id="board" style="width: 500px; max-width: 100%; margin: auto;"></div>
-        <div class="spinner" id="spinner"></div>
 
     </div>
     <!-- <form id="moveForm" >
