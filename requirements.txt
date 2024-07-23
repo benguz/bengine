@@ -2,3 +2,4 @@ chess
 asyncio
 stockfish
 flask[async]
+gunicorn
