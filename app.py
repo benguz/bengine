@@ -50,7 +50,7 @@ async def move():
 #     return jsonify({'status': 'success', 'board_svg': chess.svg.board(board)})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
 
 #if __name__ == "__main__":
     # num_games = 30
