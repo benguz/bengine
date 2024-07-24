@@ -177,7 +177,10 @@ crossorigin="anonymous"></script> -->
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `move=${move.trim()}&fen=${encodeURIComponent(fen)}`
+                body: new URLSearchParams({
+                    move: move.trim(),
+                    fen: fen
+                })            
             });
             const result = await response.json();
             spinner.classList.remove('loading');
