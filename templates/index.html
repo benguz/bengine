@@ -144,7 +144,6 @@ crossorigin="anonymous"></script> -->
             pieceTheme: '/static/img/chesspieces/wikipedia/{piece}.png',
         });
     });
-        
         async function onDrop(source, target, piece, newPos, oldPos, orientation) {
             // if it's a pawn move to _8, append q to the move
             if (piece.search(/b/) !== -1) {
@@ -171,21 +170,15 @@ crossorigin="anonymous"></script> -->
             } else if (source === 'e8' && target === 'c8' && piece === 'bK' && fen.split(' ')[2].includes('q')) {
                 move = "O-O-O";
             }
-            console.log(move, fen)
-            const response = await fetch('https://benguz--chess-bengine-move.modal.run', { //  /move
-                method: 'POST', 
-                // headers: {
-                //     'Content-Type': 'application/x-www-form-urlencoded',
-                // },
-                body: new URLSearchParams({
-                    move: move.trim(),
-                    fen: fen
-                })            
-            });
-            const result = await response.json();
-            spinner.classList.remove('loading');
+            console.log(move, encodeURIComponent(fen))
+            const url = `https://benguz--chess-bengine-move.modal.run/?move=${move}&fen=${encodeURIComponent(fen)}`;
 
-            if (result.status === 'success') {
+            const response = await fetch(url, { //  /move
+                method: 'POST'      
+            });
+            if (response.ok) {
+                const result = await response.json();
+                if (result.status === 'success') {
                 console.log(result.board_fen)
                 var config = {
                     position: result.board_fen,
@@ -199,10 +192,17 @@ crossorigin="anonymous"></script> -->
                 fen = result.board_fen
 
             } else {
-                spinner.classList.remove('loading');
                 alert(result.message);
             }
+            } else {
+                console.error("Error:", response.statusText);
+            }
+            spinner.classList.remove('loading');
+
+        
         }
+
+
 
         $('#loadFenButton').on('click', async function () {
               var config = {
