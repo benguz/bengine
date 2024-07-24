@@ -61,6 +61,8 @@ app.router.add_get('/', index)
 app.router.add_post('/move', move)
 app.router.add_post('/fen', fen)
 
+app.router.add_static('/static/', path='static', name='static')
+
 if __name__ == "__main__":
     web.run_app(app)
 
