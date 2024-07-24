@@ -4,7 +4,7 @@ import chess.pgn
 import math
 from helpers import calculate_material, hangs, recapturable, calculate_points, calculate_points_color
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from collections import deque
 import heapq
 import concurrent.futures
@@ -158,7 +158,7 @@ async def engine(board):
     loop = asyncio.get_event_loop()
 
     # limit search to 10 moves + checks and captures?
-    with ThreadPoolExecutor() as executor:
+    with ProcessPoolExecutor() as executor:  # Changed to ProcessPoolExecutor
         tasks = [loop.run_in_executor(executor, process_move, board.copy(), depth, vars, move) for move in list(board.legal_moves)]
         move_objects = await asyncio.gather(*tasks)
     print("lm1", len(lastMoves))
@@ -247,7 +247,7 @@ async def engine(board):
         # sum += traverse_move_objects(move, board.copy(), 0, True, depth)
     # print("sum", sum)
     # print("lm", len(lastMoves))
-    with ThreadPoolExecutor() as executor:
+    with ProcessPoolExecutor() as executor:
         tasks = [loop.run_in_executor(executor, traverse_move_objects, move, board.copy(), 0, depth) for move in move_objects]
         promise = await asyncio.gather(*tasks)
 
@@ -301,7 +301,7 @@ async def engine(board):
     print(resp_string, diff)
 
     depth = 8
-    with ThreadPoolExecutor() as executor:
+    with ProcessPoolExecutor() as executor:
         tasks = [loop.run_in_executor(executor, traverse_move_objects, move, board.copy(), 0, depth) for move in move_objects]
         promise = await asyncio.gather(*tasks)
     update_moves()
