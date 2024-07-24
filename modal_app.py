@@ -1,4 +1,5 @@
 from engine import engine
+from bullet_engine import bullet_engine
 from modal import Image
 import modal 
 
@@ -36,6 +37,29 @@ async def move(move: str, fen: str):
             return {'status': 'illegal', 'message': 'Illegal move'}
     except:
         return {'status': 'invalid', 'message': 'Invalid move format'}
+
+@app.function(image=chess_image, cpu=8.0, memory=2048, container_idle_timeout=120)
+@modal.web_endpoint(method="POST", docs=True)
+async def bullet(move: str, fen: str):
+    print(move, fen)
+    try:
+        # fen = urllib.parse.unquote(fen)
+        board = chess.Board(fen)
+        move = board.parse_san(move)
+        if move in board.legal_moves:
+            board.push(move)
+            nextMove = await bullet_engine(board)
+            if board.parse_san(nextMove) in board.legal_moves:
+                board.push_san(nextMove)
+            else:
+                return {'status': 'illegal', 'message': 'Illegal engine move'}
+            # return jsonify({'status': 'success', 'board_svg': chess.svg.board(board)})
+            return {'status': 'success', 'board_fen': board.fen()}
+        else:
+            return {'status': 'illegal', 'message': 'Illegal move'}
+    except:
+        return {'status': 'invalid', 'message': 'Invalid move format'}
+
     # except ValueError as e:
     #     return web.json_response({'status': 'invalid', 'message': 'Invalid move format', 'error': str(e)})
     # except Exception as e:
