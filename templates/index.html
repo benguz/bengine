@@ -111,7 +111,7 @@ crossorigin="anonymous"></script>
         <!-- submit input -->
         <div style="display: flex; flex-direction: row; width: fit-content">
             <input type="text" id="fenInput" name="fen" placeholder="start from a custom position">
-            <button type="submit" id="loadFenButton" style="margin-left: 0px;">load fen</button>
+            <button type="submit" id="loadFenButton" style="margin-left: 0px; padding: 8px; box-shadow: none;">load fen</button>
         </div>
         <div style="display: flex; flex-direction: row;">
             <button id="bullet">toggle bullet</button>
@@ -178,12 +178,14 @@ crossorigin="anonymous"></script> -->
             if (bullet) {
                 url = `https://benguz--chess-bengine-bullet.modal.run/?move=${move}&fen=${encodeURIComponent(fen)}`;
             }
-
+            try {
             const response = await fetch(url, { //  /move
-                method: 'POST'      
+                method: 'POST',
+                mode: 'cors',      
             });
-            spinner.classList.remove('loading');
-            if (response.ok) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
                 const result = await response.json();
                 if (result.status === 'success') {
                 console.log(result.board_fen)
@@ -198,12 +200,14 @@ crossorigin="anonymous"></script> -->
                 board = Chessboard('board', config)
                 fen = result.board_fen
 
+           
             } else {
-                alert(result.message);
+                throw new Error('Network response was not ok: ' + response.statusText);
             }
-            } else {
-                console.error("Error:", response.statusText);
-            }
+        } catch (error) {
+            spinner.classList.remove('loading');
+            console.error("Error:", error);
+        } 
         
         }
 

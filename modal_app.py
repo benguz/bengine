@@ -16,7 +16,7 @@ with chess_image.imports():
 
 app = modal.App(name="chess-bengine")
 
-@app.function(image=chess_image, cpu=8.0, memory=2048, container_idle_timeout=120)
+@app.function(image=chess_image, cpu=2.0, memory=2048, container_idle_timeout=120)
 @modal.web_endpoint(method="POST", docs=True)
 async def move(move: str, fen: str):
     print(move, fen)
@@ -38,7 +38,7 @@ async def move(move: str, fen: str):
     except:
         return {'status': 'invalid', 'message': 'Invalid move format'}
 
-@app.function(image=chess_image, cpu=8.0, memory=2048, container_idle_timeout=120)
+@app.function(image=chess_image, cpu=2.0, memory=2048, container_idle_timeout=120)
 @modal.web_endpoint(method="POST", docs=True)
 async def bullet(move: str, fen: str):
     print(move, fen)
