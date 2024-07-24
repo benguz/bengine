@@ -14,7 +14,7 @@ from engine import engine
 async def index(request):
     board = chess.Board()
     board_svg = chess.svg.board(board)
-    return web.Response(text=board_svg, content_type='image/svg+xml')
+    return web.FileResponse('templates/index.html')
 
 async def move(request):
     data = await request.post()
