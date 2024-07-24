@@ -174,9 +174,9 @@ crossorigin="anonymous"></script> -->
             console.log(move, fen)
             const response = await fetch('https://benguz--chess-bengine-move.modal.run', { //  /move
                 method: 'POST', 
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                // headers: {
+                //     'Content-Type': 'application/x-www-form-urlencoded',
+                // },
                 body: new URLSearchParams({
                     move: move.trim(),
                     fen: fen
